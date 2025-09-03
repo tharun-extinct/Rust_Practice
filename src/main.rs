@@ -35,7 +35,59 @@ fn get_input() -> String {
 }
 
 
+
+fn match_test(day: i32) -> &'static str {
+  match day {
+    1 => "Monday",
+    2 => "Tuesday",
+    3 => "Wednesday", 
+    4 => "Thursday",
+    5 => "Friday",
+    6 => "Saturday",
+    7 => "Sunday",
+    8 | 9 | 10 | 11 => "Weekend",
+    12 | 13 | 14 => "Weekend2",
+    _ => "Invalid day.",                          // Discard the value
+    // other => "Invalid day.",                      // Capture the value in 'other'
+    // other => format!("Invalid day: {}", other),  // Use the captured value
+  }  // No semicolon here to return the value
+}
+
+
+fn loop_test() {
+    let mut count = 0;
+
+    loop {
+        count += 1;
+        if count % 5 == 0 {
+            println!("Count is now: {}", count);
+        }
+        if count == 1000000 {
+            break;
+        }
+    }
+
+    println!("Entering into while loop");
+    while count < 10 {
+        count += 1;
+        if count == 6 {
+          count += 1;
+          break;
+        }
+    }
+
+
+    println!("Entering into for loop");
+    for i in 1..=5 {
+        println!("For loop iteration: {}", i);
+    }
+
+    println!("Loop exited after {} iterations", count);
+}
+
 fn main() {
+  loop_test();
+  /*
   let _str = input();
   let s1 = String::from("Hello");
   let s2 = String::from("World!");
@@ -48,4 +100,9 @@ fn main() {
   let age = 20;
   let can_vote = age >= 18;
   println!("Can vote? {}", type_of(&can_vote));
+
+  println!("Day of the week: {}", match_test(14));
+  */
 }
+
+
