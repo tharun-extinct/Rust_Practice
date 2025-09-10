@@ -1,6 +1,59 @@
 use std::io;
 use std::io::Write;
 use std::any::type_name;
+use std::time::Instant;
+
+use std::collections::HashMap;
+
+fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+    let mut map = HashMap::new();
+    println!("{:?}, {:?}", nums.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", "), nums.iter().enumerate());
+
+    for (i, num) in nums.iter().enumerate() {
+        println!("i: {}, num: {}", i, num);
+    }
+
+    for (i, &num) in nums.iter().enumerate() {
+        println!("Option impl -> {:?}", map.get(&(target - num)));
+        println!("pattern matching -> {:?}", if let Some(&j) = map.get(&(target - num)) { j as i32 } else { -1 });
+        //println!("{:?}", let Some(&j) = map.get(&(target - num)) else { -1 });
+        if let Some(&j) = map.get(&(target - num)) {
+            return vec![j as i32, i as i32];
+        }
+        map.insert(num, i);
+    }
+    vec![]
+}
+
+
+
+
+
+fn test() {
+    let vec = vec![1, 2, 3, 4, 5];
+    let len = vec.len();
+
+    for _i in 1..len {
+        println!("{:?}", type_name::<usize>()); //type_name::<typeof()>());
+    }
+}
+
+fn is_prime(n: u64) -> bool {
+    if n == 2 {
+        return true;
+    }
+    if n < 2 || n % 2 == 0 {
+        return false;
+    }
+    for i in 2..=((n as f64).sqrt() as u64) {
+        if n % i == 0 {
+            return false;
+        }
+    }
+    true
+}
+
+
 
 fn input() -> String {
     let mut input = String::new(); // Create a mutable String to store input
@@ -17,9 +70,11 @@ fn input() -> String {
 }
 
 
+
 fn type_of<T>(_: &T) -> &'static str {  // Remove & to accept values
     type_name::<T>()
 }
+
 
 
 fn get_input() -> String {
@@ -33,7 +88,6 @@ fn get_input() -> String {
 
     input.trim().to_string()
 }
-
 
 
 fn match_test(day: i32) -> &'static str {
@@ -55,6 +109,8 @@ fn match_test(day: i32) -> &'static str {
 
 
 fn loop_test() {
+    let start = Instant::now();
+    
     let mut count = 0;
 
     loop {
@@ -67,26 +123,38 @@ fn loop_test() {
         }
     }
 
-    println!("Entering into while loop");
-    while count < 10 {
-        count += 1;
-        if count == 6 {
-          count += 1;
-          break;
-        }
-    }
-
-
-    println!("Entering into for loop");
-    for i in 1..=5 {
-        println!("For loop iteration: {}", i);
-    }
-
-    println!("Loop exited after {} iterations", count);
+    
+    let duration = start.elapsed();
+    println!("Function execution time: {:?}", duration);
+    println!("Function execution time in milliseconds: {:.2}", duration.as_millis());
 }
 
+
+
 fn main() {
-  loop_test();
+    println!("{:?}", two_sum(vec![2,5,7,11,15], 9));   //.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", ")
+    //test();
+
+    // Comment out exit to run the prime testing code
+    std::process::exit(0);
+    
+    let start_main = Instant::now();
+    let mut count = 0;
+    let limit = 1_000_000; // Reduced for faster testing
+    
+    for i in 1..=limit {
+        if is_prime(i) {
+            count += 1;
+        }
+        // Show progress every 100,000
+        if i % 100_000 == 0 {
+            println!("Checked {} thousand numbers, found {} primes so far", i / 1_000, count);
+        }
+    }
+    let main_duration = start_main.elapsed();
+    println!("Number of primes between 1 and {}: {}", limit, count);
+    println!("Total main execution time: {:?}", main_duration);
+}
   /*
   let _str = input();
   let s1 = String::from("Hello");
@@ -102,7 +170,35 @@ fn main() {
   println!("Can vote? {}", type_of(&can_vote));
 
   println!("Day of the week: {}", match_test(14));
-  */
+
+
+
+
+  fn sieve_of_eratosthenes(limit: usize) -> Vec<bool> {
+    let mut is_prime = vec![true; limit + 1];
+    is_prime[0] = false;
+    if limit > 0 { is_prime[1] = false; }
+    
+    for i in 2..=((limit as f64).sqrt() as usize) {
+        if is_prime[i] {
+            for j in ((i * i)..=limit).step_by(i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+    is_prime
 }
+
+fn main() {
+    let start_main = Instant::now();
+    let limit = 10_000_000; // Start with 10M
+    let primes = sieve_of_eratosthenes(limit);
+    let count = primes.iter().filter(|&&x| x).count();
+    let main_duration = start_main.elapsed();
+    println!("Number of primes between 1 and {}: {}", limit, count);
+    println!("Total main execution time: {:?}", main_duration);
+}
+    */
+
 
 
