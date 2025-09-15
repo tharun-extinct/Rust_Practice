@@ -2,20 +2,17 @@ use std::io;
 use std::io::Write;
 use std::any::type_name;
 use std::time::Instant;
-
+use std::collections::HashSet;
 use std::collections::HashMap;
 
 fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     let mut map = HashMap::new();
     println!("{:?}, {:?}", nums.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", "), nums.iter().enumerate());
 
-    for (i, num) in nums.iter().enumerate() {
-        println!("i: {}, num: {}", i, num);
-    }
 
     for (i, &num) in nums.iter().enumerate() {
-        println!("Option impl -> {:?}", map.get(&(target - num)));
-        println!("pattern matching -> {:?}", if let Some(&j) = map.get(&(target - num)) { j as i32 } else { -1 });
+        //println!("{:?}, {:?}", map.get(&(target - num)), type_of(&map.get(&(target - num))) );
+        println!("pattern matching -> {}", if let Some(&j) = map.get(&(target - num)) { j } else { 111 });
         //println!("{:?}", let Some(&j) = map.get(&(target - num)) else { -1 });
         if let Some(&j) = map.get(&(target - num)) {
             return vec![j as i32, i as i32];
@@ -26,7 +23,18 @@ fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
 }
 
 
+fn can_be_typed_words(text: String, broken_letters: String) -> i32 {
+    let broken: HashSet<char> = broken_letters.chars().collect();
+    println!("{:?} {:?}", broken_letters.chars().collect::<Vec<char>>(), type_of(&broken_letters));
+    let mut count = 0;
 
+    for word in text.split_whitespace() {
+        if word.chars().all(|c| !broken.contains(&c)) {
+            count += 1;
+        }
+    }
+    count
+}
 
 
 fn test() {
@@ -132,11 +140,19 @@ fn loop_test() {
 
 
 fn main() {
-    println!("{:?}", two_sum(vec![2,5,7,11,15], 9));   //.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", ")
+
+    println!("{}", can_be_typed_words("hello world".to_string(), "ad".to_string()));
+}
+
+    /*std::process::exit(0);
+    let vec = vec![1, 2, 3, 4, 5];
+    println!("{:?}", vec.iter().map(|x| x.to_string()).collect::<Vec<String>>());
+    println!("{:?}", vec.iter().join(", "));
+    //println!("{:?}", two_sum(vec![2,5,7,11,15], 9));   //.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", ")
     //test();
 
     // Comment out exit to run the prime testing code
-    std::process::exit(0);
+    
     
     let start_main = Instant::now();
     let mut count = 0;
@@ -155,7 +171,6 @@ fn main() {
     println!("Number of primes between 1 and {}: {}", limit, count);
     println!("Total main execution time: {:?}", main_duration);
 }
-  /*
   let _str = input();
   let s1 = String::from("Hello");
   let s2 = String::from("World!");
@@ -199,6 +214,9 @@ fn main() {
     println!("Total main execution time: {:?}", main_duration);
 }
     */
+
+
+
 
 
 
